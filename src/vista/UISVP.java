@@ -1,19 +1,19 @@
-package src.vista;
+package vista;
 
-import src.controlador.ControladorEmpresas;
-import src.controlador.SistemaVentaPasajes;
-import src.excepciones.SistemaVentaPasajesException;
-import src.modelo.TipoDocumento;
+import controlador.ControladorEmpresas;
+import controlador.SistemaVentaPasajes;
+import excepciones.SistemaVentaPasajesException;
+import modelo.TipoDocumento;
 import utilidades.*;
-import src.utils.Tabla;
-import src.utils.TextMenu;
+import utils.Tabla;
+import utils.TextMenu;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static src.utils.Texto.centrar;
+import static utils.Texto.centrar;
 
 public class UISVP {
     // Atributos

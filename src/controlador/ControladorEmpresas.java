@@ -1,6 +1,6 @@
 package controlador;
 
-import src.excepciones.SistemaVentaPasajesException;
+import excepciones.SistemaVentaPasajesException;
 import utilidades.Direccion;
 import utilidades.IdPersona;
 import utilidades.Nombre;
