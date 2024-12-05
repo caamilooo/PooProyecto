@@ -1,11 +1,10 @@
 package vista;
 
-import modelo.Empresa;
+import controlador.ControladorEmpresas;
+import excepciones.SVPExepction;
 import utilidades.Rut;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 
 public class GUICreaEmpresa extends JDialog {
     private JPanel contentPane;
@@ -26,17 +25,22 @@ public class GUICreaEmpresa extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
+
+
+
         buttonOK.addActionListener(e -> {
-            String rut = RUTText.getText().trim();
+            String rutString = RUTText.getText().trim();
             String nombre = NomText.getText().trim();
             String url = URLText.getText().trim();
 
-            if (rut.isEmpty()){
+            Rut rut =Rut.of(rutString);
+
+            if (rutString.isEmpty()){
                 JOptionPane.showMessageDialog(this, "El R.U.T es obligatorio");
                 return;
             }
 
-            if (!Rut.esValido(rut)) {
+            if (!Rut.esValido(rutString)) {
                 JOptionPane.showMessageDialog(this, "R.U.T no valido.");
                 return;
             }
@@ -56,13 +60,19 @@ public class GUICreaEmpresa extends JDialog {
                 return;
             }
 
-            JOptionPane.showMessageDialog(this, "Empresa guardada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                ControladorEmpresas.getInstance().createEmpresa(rut, nombre, url);
+                JOptionPane.showMessageDialog(this, "Empresa guardada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            } catch (SVPExepction exception) {
+                JOptionPane.showMessageDialog(this, exception.getMessage());
+            }
+
 
             RUTText.setText("");
             NomText.setText("");
             URLText.setText("");
 
-            //dispose();
+            dispose();
         });
 
         buttonCancel.addActionListener(e -> dispose());

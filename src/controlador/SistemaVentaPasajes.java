@@ -1,6 +1,6 @@
 package controlador;
 
-import excepciones.SistemaVentaPasajesException;
+import excepciones.SVPExepction;
 import utilidades.IdPersona;
 import utilidades.Nombre;
 
@@ -55,7 +55,7 @@ public class SistemaVentaPasajes {
             Cliente nuevo = new Cliente(id, nom, fono, email);
             clientes.add(nuevo);
         } else {
-            throw new SistemaVentaPasajesException("Ya existe cliente con el id dado");
+            throw new SVPExepction("Ya existe cliente con el id dado");
         }
     }
 
@@ -65,7 +65,7 @@ public class SistemaVentaPasajes {
             Pasajero nuevo = new Pasajero(id, nom, fono, contacto, fonoContacto);
             pasajeros.add(nuevo);
         } else {
-            throw new SistemaVentaPasajesException("Ya existe pasajero con el id dado");
+            throw new SVPExepction("Ya existe pasajero con el id dado");
         }
     }
 
@@ -100,22 +100,22 @@ public class SistemaVentaPasajes {
                                 Viaje viaje = new Viaje(fecha, hora, precio, duracion, bus, auxiliar, conductor, salida, llegada);
                                 viajes.add(viaje);
                             } else {
-                                throw new SistemaVentaPasajesException("Ya existe viaje con la fecha, hora y patente de bus dados");
+                                throw new SVPExepction("Ya existe viaje con la fecha, hora y patente de bus dados");
                             }
                         } else {
-                            throw new SistemaVentaPasajesException("No existe terminal (llegada) en la comuna dada");
+                            throw new SVPExepction("No existe terminal (llegada) en la comuna dada");
                         }
                     } else {
-                        throw new SistemaVentaPasajesException("No existe terminal (salida) en la comuna dada");
+                        throw new SVPExepction("No existe terminal (salida) en la comuna dada");
                     }
                 } else {
-                    throw new SistemaVentaPasajesException("No existe conductor con el id dado");
+                    throw new SVPExepction("No existe conductor con el id dado");
                 }
             } else {
-                throw new SistemaVentaPasajesException("No existe auxiliar con el id dado");
+                throw new SVPExepction("No existe auxiliar con el id dado");
             }
         } else {
-            throw new SistemaVentaPasajesException("No existe bus con la patente dada");
+            throw new SVPExepction("No existe bus con la patente dada");
         }
     }
 
@@ -127,13 +127,13 @@ public class SistemaVentaPasajes {
                 if (findVenta(idDoc, tipo).isEmpty()) {
                     ventas.add(new Venta(idDoc, tipo, LocalDate.now(), cliente.get()));
                 } else {
-                    throw new SistemaVentaPasajesException("Ya existe venta con id y tipo documento dados");
+                    throw new SVPExepction("Ya existe venta con id y tipo documento dados");
                 }
             } else {
-                throw new SistemaVentaPasajesException("No existen viajes disponibles para los criterios dados");
+                throw new SVPExepction("No existen viajes disponibles para los criterios dados");
             }
         } else {
-            throw new SistemaVentaPasajesException("No existe cliente con el id dado");
+            throw new SVPExepction("No existe cliente con el id dado");
         }
     }
 
@@ -150,13 +150,13 @@ public class SistemaVentaPasajes {
                 if (pasajero.isPresent()) {
                     venta.get().createPasaje(asiento, viaje.get(), pasajero.get());
                 } else {
-                    throw new SistemaVentaPasajesException("No existe pasajero con el id dado");
+                    throw new SVPExepction("No existe pasajero con el id dado");
                 }
             } else {
-                throw new SistemaVentaPasajesException("No existe viaje en la fecha, hora y patente de bus dados");
+                throw new SVPExepction("No existe viaje en la fecha, hora y patente de bus dados");
             }
         } else {
-            throw new SistemaVentaPasajesException("No existe venta con id y tipo documento dados");
+            throw new SVPExepction("No existe venta con id y tipo documento dados");
         }
     }
 
@@ -189,10 +189,10 @@ public class SistemaVentaPasajes {
         if (ventaOptional.isPresent()) {
             boolean pagadoOk = ventaOptional.get().pagaMonto();
             if (!pagadoOk) {
-                throw new SistemaVentaPasajesException("Pago no realizado, venta ya fue pagada");
+                throw new SVPExepction("Pago no realizado, venta ya fue pagada");
             }
         } else {
-            throw new SistemaVentaPasajesException("No existe venta con el id y tipo documento dados");
+            throw new SVPExepction("No existe venta con el id y tipo documento dados");
         }
     }
 
@@ -201,10 +201,10 @@ public class SistemaVentaPasajes {
         if (ventaOptional.isPresent()) {
             boolean pagadoOk = ventaOptional.get().pagaMonto(nroTarjeta);
             if (!pagadoOk) {
-                throw new SistemaVentaPasajesException("Pago no realizado, venta ya fue pagada");
+                throw new SVPExepction("Pago no realizado, venta ya fue pagada");
             }
         } else {
-            throw new SistemaVentaPasajesException("No existe venta con el id y tipo documento dados");
+            throw new SVPExepction("No existe venta con el id y tipo documento dados");
         }
     }
 
@@ -243,7 +243,7 @@ public class SistemaVentaPasajes {
     public String[][] listPasajerosViaje(LocalDate fecha, LocalTime hora, String patBus) {
         Optional<Viaje> elViaje = findViaje(fecha, hora, patBus);
         if (elViaje.isEmpty()) {
-            throw new SistemaVentaPasajesException("No existe viaje en la fecha, hora y patente de bus dados");
+            throw new SVPExepction("No existe viaje en la fecha, hora y patente de bus dados");
         }
         return elViaje.get().getListaPasajeros();
     }

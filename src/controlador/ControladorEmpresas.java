@@ -1,6 +1,6 @@
 package controlador;
 
-import excepciones.SistemaVentaPasajesException;
+import excepciones.SVPExepction;
 import utilidades.Direccion;
 import utilidades.IdPersona;
 import utilidades.Nombre;
@@ -43,7 +43,7 @@ public class ControladorEmpresas {
             empresas.add(empresa);
             return;
         }
-        throw new SistemaVentaPasajesException("Existe empresa con el rut dado");
+        throw new SVPExepction("Existe empresa con el rut dado");
     }
 
     public void createBus(String patente, String marca, String modelo, int nroFilas,
@@ -57,10 +57,10 @@ public class ControladorEmpresas {
                 nuevo.setModelo(modelo);
                 buses.add(nuevo);
             } else {
-                throw new SistemaVentaPasajesException("No existe empresa con el rut dado");
+                throw new SVPExepction("No existe empresa con el rut dado");
             }
         } else {
-            throw new SistemaVentaPasajesException("Ya existe bus con la patente dada");
+            throw new SVPExepction("Ya existe bus con la patente dada");
         }
     }
 
@@ -69,10 +69,10 @@ public class ControladorEmpresas {
             if (findTerminalPorComuna(direccion.getComuna()).isEmpty()) {
                 terminales.add(new Terminal(nombre, direccion));
             } else {
-                throw new SistemaVentaPasajesException("Ya existe terminal en la comuna dada");
+                throw new SVPExepction("Ya existe terminal en la comuna dada");
             }
         } else {
-            throw new SistemaVentaPasajesException("Ya existe terminal con el nombre dado");
+            throw new SVPExepction("Ya existe terminal con el nombre dado");
         }
     }
 
@@ -81,10 +81,10 @@ public class ControladorEmpresas {
         if (empresaOptional.isPresent()) {
             boolean contatacionOk = empresaOptional.get().addConductor(id, nombre, dir);
             if (!contatacionOk) {
-                throw new SistemaVentaPasajesException("Ya existe tripulante con el id dado en la empresa");
+                throw new SVPExepction("Ya existe tripulante con el id dado en la empresa");
             }
         } else {
-            throw new SistemaVentaPasajesException("No existe empresa con el rut dado");
+            throw new SVPExepction("No existe empresa con el rut dado");
         }
     }
 
@@ -93,10 +93,10 @@ public class ControladorEmpresas {
         if (empresaOptional.isPresent()) {
             boolean contatacionOk = empresaOptional.get().addAuxiliar(id, nombre, dir);
             if (!contatacionOk) {
-                throw new SistemaVentaPasajesException("Ya existe tripulante con el id dado en la empresa");
+                throw new SVPExepction("Ya existe tripulante con el id dado en la empresa");
             }
         } else {
-            throw new SistemaVentaPasajesException("No existe empresa con el rut dado");
+            throw new SVPExepction("No existe empresa con el rut dado");
         }
     }
 
@@ -159,7 +159,7 @@ public class ControladorEmpresas {
             }
             return listado;
         } else {
-            throw new SistemaVentaPasajesException("No existe un terminal con el nombre dado");
+            throw new SVPExepction("No existe un terminal con el nombre dado");
         }
     }
 
@@ -178,7 +178,7 @@ public class ControladorEmpresas {
             }
             return listado;
         }
-        throw new SistemaVentaPasajesException("No existe empresa con el rut dado");
+        throw new SVPExepction("No existe empresa con el rut dado");
     }
 
     protected Optional<Empresa> findEmpresa(Rut rut) {

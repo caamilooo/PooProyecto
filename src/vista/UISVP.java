@@ -2,7 +2,7 @@ package vista;
 
 import controlador.ControladorEmpresas;
 import controlador.SistemaVentaPasajes;
-import excepciones.SistemaVentaPasajesException;
+import excepciones.SVPExepction;
 import modelo.TipoDocumento;
 import utilidades.*;
 import utils.Tabla;
@@ -173,7 +173,14 @@ public class UISVP {
     }
 
     private void createEmpresa() {
-        titulo("Creando una nueva Empresa");
+
+        GUICreaEmpresa dialog = new GUICreaEmpresa();
+        dialog.pack();
+        dialog.setLocationRelativeTo(null);
+        dialog.setAlwaysOnTop(true);
+        dialog.setVisible(true);
+
+        /*titulo("Creando una nueva Empresa");
         Rut rut = leeRut();
         label("Nombre");
         String nombre = leeStringAlfanumerico();
@@ -184,11 +191,18 @@ public class UISVP {
             titulo("Empresa guardada exitosamente");
         } catch (SistemaVentaPasajesException e) {
             error(e.getMessage());
-        }
+        }*/
     }
 
     private void contrataTripulante() {
-        titulo("Contatando un nuevo Tripulante");
+
+        GUIContratarTripulante dialog = new GUIContratarTripulante();
+        dialog.pack();
+        dialog.setLocationRelativeTo(null);
+        dialog.setAlwaysOnTop(true);
+        dialog.setVisible(true);
+
+        /*titulo("Contatando un nuevo Tripulante");
         subTitulo("Dato de la Empresa");
         Rut rutEmpresa = leeRut();
         subTitulo("Datos tripulante");
@@ -206,7 +220,7 @@ public class UISVP {
             }
         } catch (SistemaVentaPasajesException e) {
             error(e.getMessage());
-        }
+        }*/
     }
 
     private void createTerminal() {
@@ -217,7 +231,7 @@ public class UISVP {
         try {
             ControladorEmpresas.getInstance().createTerminal(nombre, direccion);
             titulo("Terminal guardado exitosamente");
-        } catch (SistemaVentaPasajesException e) {
+        } catch (SVPExepction e) {
             error(e.getMessage());
         }
     }
@@ -233,13 +247,19 @@ public class UISVP {
         try {
             SistemaVentaPasajes.getInstance().createCliente(id, nombreCompleto, telefono, email);
             titulo("Cliente guardado exitosamente");
-        } catch (SistemaVentaPasajesException e) {
+        } catch (SVPExepction e) {
             error(e.getMessage());
         }
     }
 
     private void createBus() {
-        titulo("Creando un nuevo Bus");
+        GUICreacionDeBus dialog = new GUICreacionDeBus();
+        dialog.pack();
+        dialog.setLocationRelativeTo(null);
+        dialog.setAlwaysOnTop(true);
+        dialog.setVisible(true);
+
+        /*titulo("Creando un nuevo Bus");
         label("Patente");
         String patente = leePatente();
         label("Marca");
@@ -255,7 +275,7 @@ public class UISVP {
             titulo("Bus guardado exitosamente");
         } catch (SistemaVentaPasajesException e) {
             error(e.getMessage());
-        }
+        }*/
     }
 
     private void createViaje() {
@@ -290,7 +310,7 @@ public class UISVP {
             SistemaVentaPasajes.getInstance().createViaje(fecha, hora, precio, duracion, patBus,
                     idPersonas, nomComunas);
             titulo("Viaje guardado exitosamente");
-        } catch (SistemaVentaPasajesException e) {
+        } catch (SVPExepction e) {
             error(e.getMessage());
         }
     }
@@ -348,7 +368,7 @@ public class UISVP {
                                         Integer.parseInt(asientoVendido.trim()), idPasajero);
                         subTitulo("Pasaje agregado exitosamente");
                         pasajesYaVendidos++;
-                    } catch (SistemaVentaPasajesException e) {
+                    } catch (SVPExepction e) {
                         error("Pasaje no se pudo generar");
                     }
                 }
@@ -363,7 +383,7 @@ public class UISVP {
             } else {
                 error("No es posible recuperar monto de la venta");
             }
-        } catch (SistemaVentaPasajesException e) {
+        } catch (SVPExepction e) {
             error(e.getMessage());
         }
     }
@@ -497,7 +517,7 @@ public class UISVP {
                 char[] align = {'r', 'r', 'l', 'l', 'l'};
                 Tabla.printTable(data, column, len, align, 0);
             }
-        } catch (SistemaVentaPasajesException e) {
+        } catch (SVPExepction e) {
             error(e.getMessage());
         }
     }
@@ -530,7 +550,7 @@ public class UISVP {
                 char[] align = {'l', 'l', 'l', 'l', 'r'};
                 Tabla.printTable(data, column, len, align, 0);
             }
-        } catch (SistemaVentaPasajesException e) {
+        } catch (SVPExepction e) {
             error(e.getMessage());
         }
     }
@@ -548,7 +568,7 @@ public class UISVP {
                 char[] align = {'l', 'l', 'l', 'r', 'l'};
                 Tabla.printTable(data, column, len, align, 0);
             }
-        } catch (SistemaVentaPasajesException e) {
+        } catch (SVPExepction e) {
             error(e.getMessage());
         }
     }
