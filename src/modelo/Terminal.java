@@ -2,9 +2,10 @@ package modelo;
 
 import utilidades.Direccion;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Terminal {
+public class Terminal implements Serializable {
     // Relaciones
     private final ArrayList<Viaje> llegadas;
     private final ArrayList<Viaje> salidas;

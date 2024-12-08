@@ -1,9 +1,10 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-public class Pasaje {
+public class Pasaje implements Serializable {
     private final int asiento;
     private final long numero;
     //asociaciones

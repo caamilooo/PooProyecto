@@ -1,8 +1,9 @@
 package modelo;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Bus {
+public class Bus implements Serializable {
     // Atributos
     private final String patente;
     private final int nroAsientos;

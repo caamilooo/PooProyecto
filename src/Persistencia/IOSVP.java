@@ -26,7 +26,7 @@ public class IOSVP {
 
 
     public Object[] readDatosIniciales() throws SVPExepction {
-        File datosIniciales = new File("src/SVPDatosIniciales");
+        File svpDatosIniciales = new File("src/SVPDatosIniciales");
         Scanner scr;
 
         ArrayList<Cliente> clientes = new ArrayList<>();
@@ -38,36 +38,40 @@ public class IOSVP {
         ArrayList<Terminal> terminales = new ArrayList<>();
         ArrayList<Bus> buses = new ArrayList<>();
         ArrayList<Viaje> viajes = new ArrayList<>();
+        ArrayList<Object> out = new ArrayList<>();
 
         try {
-            scr = new Scanner(new FileInputStream(datosIniciales));
+            scr = new Scanner(new FileInputStream(svpDatosIniciales));
 
             int sec = 0;
+
             while (scr.hasNextLine()) {
                 String linea = scr.nextLine().trim();
+
                 if (linea.equals("+")) {
                     if (scr.hasNextLine()) {
                         sec += 1;
                     }
                 } else if (sec < 6) {
                     switch (sec) {
-                        case 0 -> consSec1(linea, clientes, pasajeros);
-                        case 1 -> consSec2(linea, empresas);
-                        case 2 -> consSec3(linea, empresas, auxiliares, conductores, tripulantes);
-                        case 3 -> consSec4(linea, terminales);
-                        case 4 -> consSec5(linea, empresas, buses);
-                        case 5 -> consSec6(linea, viajes, buses, terminales);
+                        case 0 -> consSec1(linea, clientes, pasajeros, out);
+                        case 1 -> consSec2(linea, empresas, out);
+                        case 2 -> consSec3(linea, empresas, auxiliares, conductores, tripulantes, out);
+                        case 3 -> consSec4(linea, terminales, out);
+                        case 4 -> consSec5(linea, empresas, buses, out);
+                        case 5 -> consSec6(linea, viajes, buses, terminales, out);
                     }
                 }
             }
         } catch (SVPExepction | FileNotFoundException e) {
             throw new RuntimeException("No existe o no fue posible abrir el archivo");
         }
-        return new Object[]{clientes, pasajeros, empresas, tripulantes, auxiliares, conductores, terminales, buses, viajes};
+        return out.toArray();
     }
 
     private static LocalDate constructorFecha(String fecha) {
-        return LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return LocalDate.parse(fecha, formato);
     }
 
     private static LocalTime constructorHora(String hora) {
@@ -78,14 +82,14 @@ public class IOSVP {
     }
 
 
-    private void consSec1(String linea, ArrayList<Cliente> clientes, ArrayList<Pasajero> pasajeros) {
-        String [] split = linea.split(",");
+    private void consSec1(String linea, ArrayList<Cliente> clientes, ArrayList<Pasajero> pasajeros, ArrayList<Object> out) {
+        String [] split = linea.split(";");
         String tipo = split[0];
+        Rut rut = Rut.of(split[1]);
         Tratamiento tratamiento = Tratamiento.valueOf(split[2]);
         Nombre nombre = new Nombre(tratamiento, split[3], split[4], split[5]);
-        Rut rut = Rut.of(split[1]);
-        String email = split[7];
         String telefono = split[6];
+        String email = split[7];
 
         switch (tipo) {
             case "C" ->{
@@ -119,8 +123,8 @@ public class IOSVP {
         }
     }
 
-    private void consSec2(String linea, ArrayList<Empresa> empresas) {
-        String [] split = linea.split(",");
+    private void consSec2(String linea, ArrayList<Empresa> empresas,ArrayList<Object> out) {
+        String [] split = linea.split(";");
         Rut rut = Rut.of(split[0]);
         String nombre = split[1];
         String url = split[2];
@@ -129,8 +133,8 @@ public class IOSVP {
         empresas.add(empresa);
     }
 
-    private void consSec3(String linea, ArrayList<Empresa> empresas, ArrayList<Auxiliar> auxiliares, ArrayList<Conductor>conductores, ArrayList<Tripulante>tripulantes) {
-        String [] split = linea.split(",");
+    private void consSec3(String linea, ArrayList<Empresa> empresas, ArrayList<Auxiliar> auxiliares, ArrayList<Conductor>conductores, ArrayList<Tripulante>tripulantes, ArrayList<Object> out) {
+        String [] split = linea.split(";");
         String tipo = split[0];
         Rut rut = Rut.of(split[1]);
         Tratamiento tratamiento = Tratamiento.valueOf(split[2]);
@@ -156,15 +160,15 @@ public class IOSVP {
         }
     }
 
-    private void consSec4(String linea, ArrayList<Terminal> terminales) {
-        String [] split = linea.split(",");
+    private void consSec4(String linea, ArrayList<Terminal> terminales, ArrayList<Object> out) {
+        String [] split = linea.split(";");
         String nombre = split[0];
         Direccion direccion = new Direccion(split[1], Integer.parseInt(split[2]), split[3]);
         terminales.add(new Terminal(nombre, direccion));
     }
 
-    private void consSec5(String linea, ArrayList<Empresa> empresas, ArrayList<Bus> buses) {
-        String [] split = linea.split(",");
+    private void consSec5(String linea, ArrayList<Empresa> empresas, ArrayList<Bus> buses, ArrayList<Object> out) {
+        String [] split = linea.split(";");
         String patente = split[0];
         String marca = split[1];
         String modelo = split[2];
@@ -182,8 +186,8 @@ public class IOSVP {
         }
     }
 
-    private void consSec6(String linea, ArrayList<Viaje> viajes, ArrayList<Bus> buses, ArrayList<Terminal> terminales) {
-        String [] split = linea.split(",");
+    private void consSec6(String linea, ArrayList<Viaje> viajes, ArrayList<Bus> buses, ArrayList<Terminal> terminales, ArrayList<Object> out) {
+        String [] split = linea.split(";");
         LocalDate fecha = constructorFecha(split[0]);
         LocalTime hora = constructorHora(split[1]);
         int precio = Integer.parseInt(split[2]);

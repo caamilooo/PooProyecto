@@ -147,7 +147,7 @@ public class UISVP {
                 "Crear cliente", "Crear bus", "Crear viaje", "Vender pasajes",
                 "Listar ventas", "Listar viajes", "Listar pasajeros de viaje",
                 "Listar empresas", "Listar llegadas/salidas de terminal",
-                "Listar ventas de empresa");
+                "Listar ventas de empresa", "Generar pasajes venta", "Leer datos iniciales", "Guardar datos del sistema", "Leer datos del sistema");
         int opcion;
         do {
             menuPrincipal.desplegar();
@@ -166,6 +166,10 @@ public class UISVP {
                 case 11 -> listEmpresas();
                 case 12 -> listLlegadasYSalidasDeTerminal();
                 case 13 -> listVentasEmpresa();
+                case 14 -> generatePasajesVentas();
+                case 15 -> readDatosIniciales();
+                case 16 -> saveDatosSistema();
+                case 17 -> readDatosSistema();
             }
 
         } while (opcion != menuPrincipal.opSalir());
@@ -173,12 +177,7 @@ public class UISVP {
     }
 
     private void createEmpresa() {
-
-        GUICreaEmpresa dialog = new GUICreaEmpresa();
-        dialog.pack();
-        dialog.setLocationRelativeTo(null);
-        dialog.setAlwaysOnTop(true);
-        dialog.setVisible(true);
+        GUICreaEmpresa.display();
 
         /*titulo("Creando una nueva Empresa");
         Rut rut = leeRut();
@@ -195,13 +194,6 @@ public class UISVP {
     }
 
     private void contrataTripulante() {
-
-        GUIContratarTripulante dialog = new GUIContratarTripulante();
-        dialog.pack();
-        dialog.setLocationRelativeTo(null);
-        dialog.setAlwaysOnTop(true);
-        dialog.setVisible(true);
-
         /*titulo("Contatando un nuevo Tripulante");
         subTitulo("Dato de la Empresa");
         Rut rutEmpresa = leeRut();
@@ -253,11 +245,7 @@ public class UISVP {
     }
 
     private void createBus() {
-        GUICreacionDeBus dialog = new GUICreacionDeBus();
-        dialog.pack();
-        dialog.setLocationRelativeTo(null);
-        dialog.setAlwaysOnTop(true);
-        dialog.setVisible(true);
+        GUICreacionDeBus.display();
 
         /*titulo("Creando un nuevo Bus");
         label("Patente");
@@ -556,7 +544,9 @@ public class UISVP {
     }
 
     private void listVentasEmpresa() {
-        titulo("Listado de ventas de una empresa");
+        GUIListarVentasEmpresas.display();
+
+       /* titulo("Listado de ventas de una empresa");
         Rut rut = leeRut();
         try {
             String[][] data = ControladorEmpresas.getInstance().listVentasEmpresa(rut);
@@ -569,6 +559,54 @@ public class UISVP {
                 Tabla.printTable(data, column, len, align, 0);
             }
         } catch (SVPExepction e) {
+            error(e.getMessage());
+        }*/
+    }
+
+    private void generatePasajesVentas(){
+        try {
+            String idDoc = leeId("Ingrese el ID del documento: ");
+            TipoDocumento tipo = null;
+
+            do {
+                int op = leeDocumento();
+                switch (op){
+                    case 1:
+                        tipo = TipoDocumento.BOLETA;
+                        break;
+                    case 2:
+                        tipo = TipoDocumento.FACTURA;
+                        break;
+                    default:
+                        System.out.println("Indique una opcion valida.");
+                }
+            }while (tipo == null);
+            SistemaVentaPasajes.getInstance().generatePasajesVenta(idDoc, tipo);
+        }catch (SVPExepction e){
+            error(e.getMessage());
+        }
+    }
+
+    private void readDatosIniciales(){
+        try {
+            SistemaVentaPasajes.getInstance().readDatosIniciales();
+        }catch (SVPExepction e){
+            error(e.getMessage());
+        }
+    }
+
+    private void readDatosSistema(){
+       try {
+            SistemaVentaPasajes.getInstance().readDatosSistema();
+        }catch (SVPExepction e){
+           error(e.getMessage());
+        }
+    }
+
+    private void saveDatosSistema(){
+        try {
+            SistemaVentaPasajes.getInstance().saveDatosSistema();
+        }catch (SVPExepction e){
             error(e.getMessage());
         }
     }
@@ -658,6 +696,12 @@ public class UISVP {
         return str;
     }
 
+    private static String leeId(String msg) {
+        Scanner scan = new Scanner(System.in).useDelimiter("[\r\n\u2028\u2029\u0085\t]");
+        System.out.printf(msg);
+        return scan.next();
+    }
+
     private String leeStringAlfanumerico() {
         String str = sc.next().trim();
         while (!str.matches("^[a-zA-Z0-9 ]+$")) {
@@ -686,6 +730,11 @@ public class UISVP {
     private int leeTipoPago() {
         label("Efectivo[1] o Tarjeta[2]");
         return leePositivo(2, "Tipo de pago no válido");
+    }
+
+    private int leeDocumento(){
+        label("Tipo de documento: Boleta[1] o [2]Factura:  ");
+        return leePositivo(2, "Documento no valido");
     }
 
     private LocalTime leeHora() {

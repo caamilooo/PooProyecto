@@ -6,19 +6,23 @@ import utilidades.IdPersona;
 import utilidades.Nombre;
 import utilidades.Rut;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import modelo.*;
 
-public class ControladorEmpresas {
+public class ControladorEmpresas implements Serializable {
     // Atributos
     private static ControladorEmpresas controlador = null;
 
     // Asociaciones
-    private final List<Empresa> empresas;
-    private final List<Bus> buses;
-    private final List<Terminal> terminales;
+    private List<Empresa> empresas;
+    private List<Bus> buses;
+    private List<Terminal> terminales;
+
 
     // Constructor
     private ControladorEmpresas() {
@@ -229,5 +233,26 @@ public class ControladorEmpresas {
                     .filter(tripulante -> tripulante.getId().equals(idPersona)).toList();
         }
         return new ArrayList<>();
+    }
+
+    protected void inicializarDatos(Object [] objetos) throws SVPExepction {
+        terminales.clear();
+        buses.clear();
+        empresas.clear();
+
+        terminales = Arrays.stream(objetos)
+                .filter(obj -> obj instanceof Terminal)
+                .map(Terminal.class::cast)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        buses = Arrays.stream(objetos)
+                .filter(obj -> obj instanceof Bus)
+                .map(Bus.class::cast)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        empresas = Arrays.stream(objetos)
+                .filter(obj -> obj instanceof Empresa)
+                .map(Empresa.class::cast)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

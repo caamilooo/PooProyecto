@@ -1,9 +1,10 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
-public class Venta {
+public class Venta implements Serializable {
     // Atributos
     private final String idDocumento;
     private final TipoDocumento tipo;

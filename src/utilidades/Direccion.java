@@ -1,8 +1,9 @@
 package utilidades;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Direccion {
+public class Direccion implements Serializable {
     private final String calle;
     private final int numero;
     private final String comuna;

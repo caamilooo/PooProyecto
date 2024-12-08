@@ -1,11 +1,12 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
-public class Viaje {
+public class Viaje implements Serializable {
     // Atributos
     private final LocalDate fecha;
     private final LocalTime hora;

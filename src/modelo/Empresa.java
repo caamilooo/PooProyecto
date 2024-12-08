@@ -5,9 +5,10 @@ import utilidades.IdPersona;
 import utilidades.Nombre;
 import utilidades.Rut;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Empresa {
+public class Empresa implements Serializable {
     // Asociaciones
     private final List<Conductor> conductores;
     private final List<Auxiliar> auxiliares;

@@ -1,16 +1,21 @@
 package controlador;
 
+import Persistencia.IOSVP;
 import excepciones.SVPExepction;
 import utilidades.IdPersona;
 import utilidades.Nombre;
 
+import java.io.File;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import modelo.*;
 
-public class SistemaVentaPasajes {
+public class SistemaVentaPasajes implements Serializable {
     private static SistemaVentaPasajes instance = null;
 
     private final List<Cliente> clientes;
@@ -283,5 +288,70 @@ public class SistemaVentaPasajes {
 
     private Optional<Cliente> findCliente(IdPersona idPersona) {
         return clientes.stream().filter(cliente -> cliente.getId().equals(idPersona)).findFirst();
+    }
+
+    public void readDatosSistema()throws SVPExepction{
+        try {
+            Object [] obj1 = IOSVP.getInstance().readControladores();
+            for (Object o : obj1) {
+                if (o instanceof SistemaVentaPasajes) {
+                    instance = (SistemaVentaPasajes) o;
+                } else if (o instanceof ControladorEmpresas) {
+                    ControladorEmpresas controlador = (ControladorEmpresas) o;
+                }
+            }
+        }catch (SVPExepction e) {
+            throw new SVPExepction(e.getMessage());
+        }
+    }
+
+    public void saveDatosSistema()throws SVPExepction{
+        try {
+            Object [] ctl = {SistemaVentaPasajes.getInstance(),ControladorEmpresas.getInstance()};
+            IOSVP.getInstance().saveControladores(ctl);
+        }catch (SVPExepction e) {
+            throw new SVPExepction(e.getMessage());
+        }
+    }
+
+    public void generatePasajesVenta(String id, TipoDocumento tipo) throws SVPExepction {
+        Optional<Venta> venta = findVenta(id, tipo);
+
+        if (venta.isEmpty()) {
+            throw new SVPExepction("No existe venta con los datos indicados");
+        }
+
+        Venta venta1 = venta.get();
+        Pasaje[] pasajes = venta1.getPasajes();
+
+        if (pasajes.length == 0 || pasajes == null) {
+            throw new SVPExepction("No existe pasajes con los datos indicados");
+        }
+
+        String nombreArchivo = tipo.name() + "-" + id + ".txt";
+        try {
+            IOSVP.getInstance().savePasajesDeVenta(List.of(pasajes), nombreArchivo);
+        }catch (SVPExepction e){
+            throw new SVPExepction(e.getMessage());
+        }
+    }
+
+
+    public void readDatosIniciales()throws SVPExepction{
+        try {
+            Object [] object = IOSVP.getInstance().readDatosIniciales();
+            for (Object o : object) {
+                if (o instanceof Pasajero) {
+                    pasajeros.add((Pasajero) o);
+                }else if (o instanceof Viaje) {
+                    viajes.add((Viaje) o);
+                }else if (o instanceof Cliente) {
+                    clientes.add((Cliente) o);
+                }
+            }
+            ControladorEmpresas.getInstance().inicializarDatos(object);
+        }catch (SVPExepction e) {
+            throw new SVPExepction(e.getMessage());
+        }
     }
 }
